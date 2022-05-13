@@ -126,19 +126,32 @@ public class Car {
         heading.y=Math.sin(alpha*Math.PI/180);
 
     }
-    public void left(){
-        alpha-=(10)/Math.max(2,0.7*vel);
-        if (alpha<0){
-            alpha=360;
+    private void steer(int dir){// dir: -1 left, 1 right
+        if (vel<0){
+            dir*=-1;
+        }
+        if (dir==-1){
+            alpha-=(10)/Math.max(2,0.7*vel);
+            if (alpha<0){
+                alpha=360;
+            }
+
+
+        }
+        if (dir==1){
+            alpha+=(10)/Math.max(2,0.7*vel);
+            if (alpha>360){
+                alpha=0;
+            }
+
         }
         calcHeading();
     }
+    public void left(){
+        steer(-1);
+    }
     public void right(){
-        alpha+=(10)/Math.max(2,0.7*vel);
-        if (alpha>360){
-            alpha=0;
-        }
-        calcHeading();
+        steer(1);
     }
 
 
