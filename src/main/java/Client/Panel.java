@@ -59,6 +59,24 @@ public class Panel extends JPanel implements Runnable{
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println(ex);
             obstacles.add(new FinishLine(400,180,400,55));
+            obstacles.add(new Obstacle(400,189,937,194));
+            obstacles.add(new Obstacle(937,194,1029,284));
+            obstacles.add(new Obstacle(1029,284,1020,641));
+            obstacles.add(new Obstacle(1020,641,259,644));
+            obstacles.add(new Obstacle(400,48,942,66));
+            obstacles.add(new Obstacle(942,66,1155,162));
+            obstacles.add(new Obstacle(1155,162,1170,784));
+            obstacles.add(new Obstacle(1170,784,26,781));
+            obstacles.add(new Obstacle(26,781,30,499));
+            obstacles.add(new Obstacle(30,499,738,509));
+            obstacles.add(new Obstacle(738,510,883,475));
+            obstacles.add(new Obstacle(883,475,887,394));
+            obstacles.add(new Obstacle(887,394,580,378));
+            obstacles.add(new Obstacle(399,190,393,379));
+            obstacles.add(new Obstacle(393,379,191,378));
+            obstacles.add(new Obstacle(29,499,37,42));
+            obstacles.add(new Obstacle(37,42,400,47));
+            obstacles.add(new Obstacle(190,375,191,188));
         }
 
 

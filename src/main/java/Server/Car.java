@@ -19,7 +19,7 @@ public class Car {
     }
 
     public Vector getHeading() {
-        return heading;
+        return new Vector(heading);
     }
 
     public Vector getPos() {
