@@ -2,6 +2,7 @@ package Server;
 
 import Shared.*;
 
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -12,10 +13,24 @@ public class GameSession {
     private ArrayList<Obstacle> obstacles=new java.util.ArrayList<>();
     private LinkedList<Client> clients=new LinkedList<>();
     private LinkedList<Car> cars=new LinkedList<>();
+
+    private Color pickColor(int i){
+        switch (i){
+            case 0:
+                return Color.CYAN;
+            case 1:
+                return Color.GREEN;
+            case 2:
+                return Color.ORANGE;
+            default:
+                return Color.RED;
+        }
+    }
+
     public GameSession(LinkedList<Socket> sockets){
 
         for (int i = 0; i < sockets.size(); i++) {
-            Car car=new Car(10,100,100*(i+1));
+            Car car=new Car(10,100,50*(i+1),pickColor(i));
             cars.add(car);
             clients.add(new Client(sockets.get(i),car));
         }
@@ -29,7 +44,19 @@ public class GameSession {
 
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println(ex);
-            obstacles.add(new FinishLine(400,180,400,55));
+            CheckPoint checkPoint=new CheckPoint(400,180,400,55,0);
+            LapProgress.addCheckPoint(checkPoint);
+            obstacles.add(checkPoint);
+
+            checkPoint=new CheckPoint(595,643,594,782,1);
+            LapProgress.addCheckPoint(checkPoint);
+            obstacles.add(checkPoint);
+
+            checkPoint=new CheckPoint(612,195,611,378,2);
+            LapProgress.addCheckPoint(checkPoint);
+            obstacles.add(checkPoint);
+
+
             obstacles.add(new Obstacle(400,189,937,194));
             obstacles.add(new Obstacle(937,194,1029,284));
             obstacles.add(new Obstacle(1029,284,1020,641));
@@ -55,7 +82,7 @@ public class GameSession {
         long realDeltaTime=0;
         long lastUpdateTime=System.nanoTime();
 
-        double targetFrameTime=1000000000/FPS;
+        double targetFrameTime=1000000000.0/FPS;
         double accumulator=0;
 
 
@@ -115,7 +142,7 @@ public class GameSession {
         Socket socket=client.getSocket();
         LinkedList<CarView> carsView=new LinkedList<>();
         for (Car c:cars){
-            carsView.add(new CarView(c.getPos(),c.getAlpha(),cars.indexOf(c)));
+            carsView.add(new CarView(c.getPos(),c.getAlpha(),cars.indexOf(c), c.getColor()));
         }
 
 

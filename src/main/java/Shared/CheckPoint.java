@@ -4,11 +4,12 @@ import Shared.Obstacle;
 
 import java.awt.*;
 
-public class FinishLine extends Obstacle {
+public class CheckPoint extends Obstacle {
+    private int orderNumber;
     private double startTime=System.currentTimeMillis();
     private double lastLap=System.currentTimeMillis();
-    public FinishLine(int x1, int y1, int x2, int y2) {
-        super(x1, y1, x2, y2);
+    public CheckPoint(int x1, int y1, int x2, int y2,int orderNumber) {
+        super(x1, y1, x2, y2);this.orderNumber=orderNumber;
     }
     public void crossLine(){
 

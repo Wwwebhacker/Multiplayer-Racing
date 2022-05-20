@@ -58,7 +58,10 @@ public class Panel extends JPanel implements Runnable{
 
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println(ex);
-            obstacles.add(new FinishLine(400,180,400,55));
+            obstacles.add(new CheckPoint(400,180,400,55,0));
+            obstacles.add(new CheckPoint(595,643,594,782,1));
+            obstacles.add(new CheckPoint(612,195,611,378,2));
+
             obstacles.add(new Obstacle(400,189,937,194));
             obstacles.add(new Obstacle(937,194,1029,284));
             obstacles.add(new Obstacle(1029,284,1020,641));
@@ -101,7 +104,7 @@ public class Panel extends JPanel implements Runnable{
         long realDeltaTime=0;
         long lastUpdateTime=System.nanoTime();
 
-        double targetFrameTime=1000000000/FPS;
+        double targetFrameTime=1000000000.0/FPS;
         double accumulator=0;
 
 
@@ -189,6 +192,7 @@ public class Panel extends JPanel implements Runnable{
 
     }
     public void draw(Graphics g, CarView carView){
+        Color color=carView.getColor();
         Vector pos=carView.getPos();
         double alpha=carView.getHeading();
 
@@ -233,7 +237,7 @@ public class Panel extends JPanel implements Runnable{
         Bot_Right.y = center.y + ((width / 2) * Math.sin(angle)) - ((height / 2) * Math.cos(angle));
 
 
-        g.setColor(Color.red);
+        g.setColor(color);
         g.drawLine((int)Top_Left.x,(int)Top_Left.y,(int)Top_Right.x,(int)Top_Right.y);
         g.drawLine((int)Bot_Left.x,(int)Bot_Left.y,(int)Bot_Right.x,(int)Bot_Right.y);
 

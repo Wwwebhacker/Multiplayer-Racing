@@ -1,18 +1,26 @@
 package Server;
 
-import Shared.FinishLine;
+import Shared.CheckPoint;
 import Shared.Obstacle;
 import Shared.Vector;
 
+import java.awt.*;
 
 
 public class Car {
+
+
+
     private Vector pos;
     private double vel;
-
+    private Color color;
     private double maxspeed=20;
     private Vector heading;
     private double alpha=0;
+
+    public Color getColor() {
+        return color;
+    }
 
     public double getAlpha() {
         return alpha;
@@ -38,9 +46,9 @@ public class Car {
         this.vel = vel;
     }
 
-    public Car(double maxspeed, double x, double y){
+    public Car(double maxspeed, double x, double y,Color color){
         this.maxspeed=maxspeed;
-
+        this.color=color;
 
         heading=new Vector(1,1);
         pos=new Vector(x,y);
@@ -81,7 +89,7 @@ public class Car {
 
 
         if (dist<10){
-            if (obstacle.getClass()!= FinishLine.class){
+            if (obstacle.getClass()!= CheckPoint.class){
                 Vector newp=new Vector(closestPoint);
                 newp.sub(pos);
                 newp.normalize();
@@ -90,7 +98,7 @@ public class Car {
                 pos=newp;
                 vel*=0.95;
             }else {
-                FinishLine f=(FinishLine) obstacle;
+                CheckPoint f=(CheckPoint) obstacle;
                 f.crossLine();
                 f.printTime();
             }
