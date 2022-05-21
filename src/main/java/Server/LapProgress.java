@@ -31,7 +31,7 @@ public class LapProgress {
         }
     }
     public String getProgressMsg(){
-        return "lap: "+lap+"; checkpoint: "+progress;
+        return "lap: "+lap+" checkpoint: "+progress;
     }
 
 
