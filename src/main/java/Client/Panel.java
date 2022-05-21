@@ -1,7 +1,5 @@
 package Client;
 
-
-
 import Shared.*;
 
 import javax.swing.*;
@@ -21,8 +19,6 @@ public class Panel extends JPanel implements Runnable{
     Mouse mListner=new Mouse();
 
     final int FPS=60;
-
-
 
     LinkedList<CarView> carsView;
     ArrayList<Obstacle> obstacles=new ArrayList<>();
@@ -48,7 +44,6 @@ public class Panel extends JPanel implements Runnable{
             e.printStackTrace();
         }
         sendMsgToClient(new ClientMsg());
-
     }
     Thread gameThread;
     private void loadLevel(){
@@ -81,17 +76,9 @@ public class Panel extends JPanel implements Runnable{
             obstacles.add(new Obstacle(37,42,400,47));
             obstacles.add(new Obstacle(190,375,191,188));
         }
-
-
-
-
-
-
     }
     private void startGame()  {
         connect();
-
-
         gameThread=new Thread(this);
         loadLevel();
         gameThread.start();
@@ -99,75 +86,57 @@ public class Panel extends JPanel implements Runnable{
     @Override
     public void run() {
 
-
-
         long realDeltaTime=0;
         long lastUpdateTime=System.nanoTime();
 
         double targetFrameTime=1000000000.0/FPS;
         double accumulator=0;
 
-
         while (!gameThread.isInterrupted()){
             realDeltaTime=System.nanoTime()-lastUpdateTime;
             lastUpdateTime+=realDeltaTime;
             accumulator+=realDeltaTime;
-
-
-
             while (accumulator>targetFrameTime){
                 try {
                     update(targetFrameTime);// targetFrameTime or Accumulator????
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-
                 accumulator-=targetFrameTime;
-
             }
             repaint();
-
-
-
         }
     }
 
+    void showMsg(Graphics g){
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+        g.drawString(data,10,20);
+    }
+
+    private String data="";
     void handleServerMsg(){
-        //System.out.println("Client: handleServerMsg");
+
         ServerMsg serverMsg= null;
         try {
             serverMsg = (ServerMsg) in.readObject();
-            //System.out.println("Client: carsView accepted");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         carsView=serverMsg.getCars();
-
-
-
-
-
+        data=serverMsg.getMsg();
     }
 
     private void sendMsgToClient(ClientMsg clientMsg){
-
-        //System.out.println("Client: sendMsgToClient");
         try {
             out.writeObject(clientMsg);
-            //System.out.println("Client: msg sent");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
     }
-    private void update(double delta) throws InterruptedException {
 
+    private void update(double delta) throws InterruptedException {
         handleServerMsg();
         ClientMsg clientMsg=new ClientMsg();
         if (keyH.up){
@@ -183,13 +152,6 @@ public class Panel extends JPanel implements Runnable{
             clientMsg.setDown(true);
         }
         sendMsgToClient(clientMsg);
-
-
-
-
-
-
-
     }
     public void draw(Graphics g, CarView carView){
         Color color=carView.getColor();
@@ -203,11 +165,6 @@ public class Panel extends JPanel implements Runnable{
         int x1=(int) pos.x;
         int y1=(int) pos.y;
 
-
-//        int x2=(int) (pos.x+width/2*heading.x);
-//        int y2=(int) (pos.y+width/2*heading.y);
-
-
         Vector center=new Vector(x1,y1);
         //TOP RIGHT VERTEX:
         Vector Top_Right=new Vector(0,0);
@@ -215,27 +172,20 @@ public class Panel extends JPanel implements Runnable{
         Top_Right.x = center.x + ((width / 2) * Math.cos(angle)) - ((height / 2) * Math.sin(angle));
         Top_Right.y = center.y + ((width / 2) * Math.sin(angle)) + ((height / 2) * Math.cos(angle));
 
-
-
         //TOP LEFT VERTEX:
         Vector Top_Left=new Vector(0,0);
         Top_Left.x = center.x - ((width / 2) * Math.cos(angle)) - ((height / 2) * Math.sin(angle));
         Top_Left.y = center.y - ((width / 2) * Math.sin(angle)) + ((height / 2) * Math.cos(angle));
-
-
 
         // LEFT VERTEX:
         Vector Bot_Left=new Vector(0,0);
         Bot_Left.x = center.x - ((width / 2) * Math.cos(angle)) + ((height / 2) * Math.sin(angle));
         Bot_Left.y = center.y - ((width / 2) * Math.sin(angle)) - ((height / 2) * Math.cos(angle));
 
-
-
         //BOTTOM RIGHT VERTEX:
         Vector Bot_Right=new Vector(0,0);
         Bot_Right.x = center.x + ((width / 2) * Math.cos(angle)) + ((height / 2) * Math.sin(angle));
         Bot_Right.y = center.y + ((width / 2) * Math.sin(angle)) - ((height / 2) * Math.cos(angle));
-
 
         g.setColor(color);
         g.drawLine((int)Top_Left.x,(int)Top_Left.y,(int)Top_Right.x,(int)Top_Right.y);
@@ -256,11 +206,10 @@ public class Panel extends JPanel implements Runnable{
                 draw(g,cV);
             }
         }
-
-
         for (Obstacle o:obstacles){
             o.draw(g);
         }
+        showMsg(g);
     }
 
 

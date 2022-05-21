@@ -44,18 +44,17 @@ public class GameSession {
 
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println(ex);
+
             CheckPoint checkPoint=new CheckPoint(400,180,400,55,0);
-            LapProgress.addCheckPoint(checkPoint);
             obstacles.add(checkPoint);
 
             checkPoint=new CheckPoint(595,643,594,782,1);
-            LapProgress.addCheckPoint(checkPoint);
             obstacles.add(checkPoint);
 
             checkPoint=new CheckPoint(612,195,611,378,2);
-            LapProgress.addCheckPoint(checkPoint);
             obstacles.add(checkPoint);
 
+            LapProgress.setNumberOfCheckpoints(3);
 
             obstacles.add(new Obstacle(400,189,937,194));
             obstacles.add(new Obstacle(937,194,1029,284));
@@ -85,39 +84,25 @@ public class GameSession {
         double targetFrameTime=1000000000.0/FPS;
         double accumulator=0;
 
-
         while (true){
             realDeltaTime=System.nanoTime()-lastUpdateTime;
             lastUpdateTime+=realDeltaTime;
             accumulator+=realDeltaTime;
 
-
-
             while (accumulator>targetFrameTime){
                 update(targetFrameTime);// targetFrameTime or Accumulator????
-
-
                 accumulator-=targetFrameTime;
-
             }
-
-
-
-
         }
     }
 
     private void handleClientMsg(Client client){
-        //System.out.println("Server: handleClientMsg");
         ClientMsg clientMsg= null;
         try {
             clientMsg = (ClientMsg) client.in.readObject();
-            //System.out.println("Server: object read");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-
 
         if (clientMsg.isUp()){
             client.getCar().gas();
@@ -131,30 +116,20 @@ public class GameSession {
         if (clientMsg.isRight()){
             client.getCar().right();
         }
-
-
-
-
-
     }
     private void sendMsgToClient(Client client){
-        //System.out.println("Server: sendMsgToClient");
         Socket socket=client.getSocket();
         LinkedList<CarView> carsView=new LinkedList<>();
         for (Car c:cars){
             carsView.add(new CarView(c.getPos(),c.getAlpha(),cars.indexOf(c), c.getColor()));
         }
 
-
-            ServerMsg serverMsg=new ServerMsg(carsView);
+        ServerMsg serverMsg=new ServerMsg(carsView,client.getCar().getLapProgress().getProgressMsg());
         try {
             client.out.writeObject(serverMsg);
-            //System.out.println("Server: object sent");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void update(double delta) {
@@ -163,7 +138,6 @@ public class GameSession {
             handleClientMsg(c);
         }
         carCollision(cars.get(0),cars.get(1));
-
 
         for(Car c:cars){
             c.friction();
@@ -201,11 +175,6 @@ public class GameSession {
             c2.setPos(c2.getPos().add(d2));
 
             c2.setVel(c2.getVel()*0.9);
-
-
-
-
-
             return true;
         }
         return false;

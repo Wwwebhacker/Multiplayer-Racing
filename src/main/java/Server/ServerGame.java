@@ -12,8 +12,6 @@ public class ServerGame {
             for (int i = 0; i < 2; i++) {
                 Socket socket = server.accept();
                 System.out.println("New client connected: "+socket);
-
-
                 clients.add(socket);
             }
             GameSession gameSession=new GameSession(clients);

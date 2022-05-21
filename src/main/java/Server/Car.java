@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class Car {
 
-
+    private LapProgress lapProgress;
 
     private Vector pos;
     private double vel;
@@ -47,6 +47,7 @@ public class Car {
     }
 
     public Car(double maxspeed, double x, double y,Color color){
+        this.lapProgress=new LapProgress();
         this.maxspeed=maxspeed;
         this.color=color;
 
@@ -99,17 +100,13 @@ public class Car {
                 vel*=0.95;
             }else {
                 CheckPoint f=(CheckPoint) obstacle;
-                f.crossLine();
-                f.printTime();
+                lapProgress.advance(f);
             }
 
             return true;
         }
         return false;
     }
-
-
-
     public void calcPos(){
 
         Vector v=heading.copy();
@@ -143,15 +140,12 @@ public class Car {
             if (alpha<0){
                 alpha=360;
             }
-
-
         }
         if (dir==1){
             alpha+=(10)/Math.max(2,0.7*vel);
             if (alpha>360){
                 alpha=0;
             }
-
         }
         calcHeading();
     }
@@ -162,5 +156,7 @@ public class Car {
         steer(1);
     }
 
-
+    public LapProgress getLapProgress() {
+        return lapProgress;
+    }
 }
