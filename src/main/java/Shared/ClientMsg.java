@@ -39,4 +39,14 @@ public class ClientMsg implements Serializable {
     public boolean isUp() {
         return up;
     }
+
+    @Override
+    public String toString() {
+        return "ClientMsg{" +
+                "up=" + up +
+                ", down=" + down +
+                ", left=" + left +
+                ", right=" + right +
+                '}';
+    }
 }

@@ -86,26 +86,37 @@ public class Panel extends JPanel implements Runnable{
     @Override
     public void run() {
 
-        long realDeltaTime=0;
-        long lastUpdateTime=System.nanoTime();
 
-        double targetFrameTime=1000000000.0/FPS;
-        double accumulator=0;
-
-        while (!gameThread.isInterrupted()){
-            realDeltaTime=System.nanoTime()-lastUpdateTime;
-            lastUpdateTime+=realDeltaTime;
-            accumulator+=realDeltaTime;
-            while (accumulator>targetFrameTime){
-                try {
-                    update(targetFrameTime);// targetFrameTime or Accumulator????
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                accumulator-=targetFrameTime;
+        while (true){
+            try {
+                update(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
             repaint();
         }
+
+        
+//        long realDeltaTime=0;
+//        long lastUpdateTime=System.nanoTime();
+//
+//        double targetFrameTime=1000000000.0/FPS;
+//        double accumulator=0;
+//
+//        while (!gameThread.isInterrupted()){
+//            realDeltaTime=System.nanoTime()-lastUpdateTime;
+//            lastUpdateTime+=realDeltaTime;
+//            accumulator+=realDeltaTime;
+//            while (accumulator>targetFrameTime){
+//                try {
+//                    update(targetFrameTime);// targetFrameTime or Accumulator????
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                accumulator-=targetFrameTime;
+//            }
+//            repaint();
+//        }
     }
 
     void showMsg(Graphics g){

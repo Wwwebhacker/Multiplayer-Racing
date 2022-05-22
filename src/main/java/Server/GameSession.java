@@ -117,7 +117,7 @@ public class GameSession {
         if (clientMsg.isRight()){
             client.getCar().right();
         }
-        System.out.println("handleClientMsg end"+client.getSocket());
+        System.out.println("handleClientMsg end"+clientMsg);
     }
 
     private void sendMsgToClient(Client client, String msg){
@@ -141,7 +141,7 @@ public class GameSession {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        System.out.println("sendMsgToClient end"+serverMsg);
     }
 
     private int numberOfFinishers=0;

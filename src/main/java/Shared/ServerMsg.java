@@ -20,4 +20,12 @@ public class ServerMsg implements Serializable {
     public LinkedList<CarView> getCars() {
         return cars;
     }
+
+    @Override
+    public String toString() {
+        return "ServerMsg{" +
+                "msg='" + msg + '\'' +
+                ", cars=" + cars +
+                '}';
+    }
 }
