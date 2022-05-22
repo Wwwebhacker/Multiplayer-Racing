@@ -11,8 +11,6 @@ public class ServerGame {
         try (ServerSocket server = new ServerSocket(9797)) {
 
             for (int i = 0; i < 2; i++) {
-
-
                 Socket socket = server.accept();
                 System.out.println("New client connected: "+socket);
                 clients.add(socket);
