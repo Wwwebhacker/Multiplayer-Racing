@@ -96,7 +96,7 @@ public class Panel extends JPanel implements Runnable{
             repaint();
         }
 
-        
+
 //        long realDeltaTime=0;
 //        long lastUpdateTime=System.nanoTime();
 //
@@ -127,7 +127,7 @@ public class Panel extends JPanel implements Runnable{
 
     private String data="";
     void handleServerMsg(){
-        System.out.println("handleServerMsg start"+client);
+        //System.out.println("handleServerMsg start"+client);
         ServerMsg serverMsg= null;
         try {
             serverMsg = (ServerMsg) in.readObject();
@@ -137,17 +137,17 @@ public class Panel extends JPanel implements Runnable{
         }
         carsView=serverMsg.getCars();
         data=serverMsg.getMsg();
-        System.out.println("handleServerMsg end"+client);
+        //System.out.println("handleServerMsg end"+client);
     }
 
     private void sendMsgToClient(ClientMsg clientMsg){
-        System.out.println("sendMsgToClient start"+client);
+        //System.out.println("sendMsgToClient start"+client);
         try {
             out.writeObject(clientMsg);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("sendMsgToClient end"+client);
+        //System.out.println("sendMsgToClient end"+client);
     }
 
     private void update(double delta) throws InterruptedException {

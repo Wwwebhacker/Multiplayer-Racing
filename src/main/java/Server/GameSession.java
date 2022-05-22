@@ -73,28 +73,33 @@ public class GameSession {
         }
     }
 
-    final int FPS=60;
+    final int FPS=260;
+
     public void start(){
-        long realDeltaTime=0;
-        long lastUpdateTime=System.nanoTime();
-
-        double targetFrameTime=1000000000.0/FPS;
-        double accumulator=0;
-
         while (true){
-            realDeltaTime=System.nanoTime()-lastUpdateTime;
-            lastUpdateTime+=realDeltaTime;
-            accumulator+=realDeltaTime;
-
-            while (accumulator>targetFrameTime){
-                update(targetFrameTime);// targetFrameTime or Accumulator????
-                accumulator-=targetFrameTime;
-            }
+            update(1);
         }
+
+//        long realDeltaTime=0;
+//        long lastUpdateTime=System.nanoTime();
+//
+//        double targetFrameTime=1000000000.0/FPS;
+//        double accumulator=0;
+//
+//        while (true){
+//            realDeltaTime=System.nanoTime()-lastUpdateTime;
+//            lastUpdateTime+=realDeltaTime;
+//            accumulator+=realDeltaTime;
+//
+//            while (accumulator>targetFrameTime){
+//                update(targetFrameTime);// targetFrameTime or Accumulator????
+//                accumulator-=targetFrameTime;
+//            }
+//        }
     }
 
     private void handleClientMsg(Client client){
-        System.out.println("handleClientMsg start"+client.getSocket());
+        //System.out.println("handleClientMsg start"+client.getSocket());
         ClientMsg clientMsg= null;
         try {
             clientMsg = (ClientMsg) client.in.readObject();
@@ -104,7 +109,7 @@ public class GameSession {
         if (client.getCar().getRaceProgress().getRaceResults()!=0){
             return;
         }
-
+        client.getCar().gas();
         if (clientMsg.isUp()){
             client.getCar().gas();
         }
@@ -117,7 +122,7 @@ public class GameSession {
         if (clientMsg.isRight()){
             client.getCar().right();
         }
-        System.out.println("handleClientMsg end"+clientMsg);
+        //System.out.println("handleClientMsg end"+clientMsg);
     }
 
     private void sendMsgToClient(Client client, String msg){
@@ -141,7 +146,7 @@ public class GameSession {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("sendMsgToClient end"+serverMsg);
+        //System.out.println("sendMsgToClient end"+serverMsg);
     }
 
     private int numberOfFinishers=0;

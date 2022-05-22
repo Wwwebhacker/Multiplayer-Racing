@@ -10,7 +10,7 @@ public class ServerGame {
         LinkedList<Socket> clients=new LinkedList<>();
         try (ServerSocket server = new ServerSocket(9191)) {
 
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 2; i++) {
                 Socket socket = server.accept();
                 System.out.println("New client connected: "+socket);
                 clients.add(socket);
