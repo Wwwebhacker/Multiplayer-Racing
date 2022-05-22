@@ -8,8 +8,10 @@ import java.net.Socket;
 public class Client {
     private Socket socket;
     private Car car;
+
     ObjectInputStream in;
     ObjectOutputStream out;
+
     public Client(Socket s,Car c){
         this.socket=s;
         this.car=c;

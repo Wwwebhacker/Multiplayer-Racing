@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class Car {
 
-    private LapProgress lapProgress;
+    private RaceProgress raceProgress;
 
     private Vector pos;
     private double vel;
@@ -17,6 +17,14 @@ public class Car {
     private double maxspeed=20;
     private Vector heading;
     private double alpha=0;
+
+    public void setAlpha(double alpha) {
+        this.alpha = alpha;
+    }
+
+    public RaceProgress getRaceProgress() {
+        return raceProgress;
+    }
 
     public Color getColor() {
         return color;
@@ -47,7 +55,7 @@ public class Car {
     }
 
     public Car(double maxspeed, double x, double y,Color color){
-        this.lapProgress=new LapProgress();
+        this.raceProgress=new RaceProgress();
         this.maxspeed=maxspeed;
         this.color=color;
 
@@ -97,10 +105,10 @@ public class Car {
                 newp.mul(-10);
                 newp.add(closestPoint);
                 pos=newp;
-                vel*=0.95;
+                vel*=0.9;
             }else {
                 CheckPoint f=(CheckPoint) obstacle;
-                lapProgress.advance(f);
+                raceProgress.advance(f);
             }
 
             return true;
@@ -115,7 +123,7 @@ public class Car {
         pos.add(v);
     }
     public void gas(){
-        vel+=0.1;
+        vel+=0.07;
         vel=Math.min(maxspeed,vel);
     }
     public void brake(){
@@ -123,7 +131,16 @@ public class Car {
         vel=Math.max(-2,vel);
     }
     public void friction(){
-        vel=vel*0.99;
+        double p=0.003*vel;
+        if (vel>=p){
+            vel-=p;
+        }else
+        if (vel>=-p){
+            vel+=p;
+        }else {
+            vel=vel*0.98;
+        }
+
     }
     private void calcHeading(){
 
@@ -132,19 +149,33 @@ public class Car {
 
     }
     private void steer(int dir){// dir: -1 left, 1 right
+
         if (vel<0){
             dir*=-1;
         }
+        double alphaModif;
+        double veltmp=Math.abs(vel);
+        if (veltmp<2){
+            alphaModif=1.3*Math.abs(veltmp);
+        }else {
+            alphaModif=-veltmp/5+3;
+            if (alphaModif<0){
+                alphaModif=0;
+            }
+        }
+
         if (dir==-1){
-            alpha-=(10)/Math.max(2,0.7*vel);
+            //alpha-=(10)/Math.max(2,0.7*vel);
+            alpha-=alphaModif;
             if (alpha<0){
-                alpha=360;
+                alpha=360-alpha;
             }
         }
         if (dir==1){
-            alpha+=(10)/Math.max(2,0.7*vel);
+            //alpha+=(10)/Math.max(2,0.7*vel);
+            alpha+=alphaModif;
             if (alpha>360){
-                alpha=0;
+                alpha=alpha-360;
             }
         }
         calcHeading();
@@ -156,7 +187,5 @@ public class Car {
         steer(1);
     }
 
-    public LapProgress getLapProgress() {
-        return lapProgress;
-    }
+
 }

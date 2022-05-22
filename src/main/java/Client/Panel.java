@@ -53,7 +53,7 @@ public class Panel extends JPanel implements Runnable{
 
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println(ex);
-            obstacles.add(new CheckPoint(400,180,400,55,0));
+            obstacles.add(new CheckPoint(400,180,400,55,0,Color.BLUE));
             obstacles.add(new CheckPoint(595,643,594,782,1));
             obstacles.add(new CheckPoint(612,195,611,378,2));
 
@@ -158,8 +158,8 @@ public class Panel extends JPanel implements Runnable{
         Vector pos=carView.getPos();
         double alpha=carView.getHeading();
 
-        int height=15;
-        int width=30;
+        double height=15;
+        double width=30;
 
 
         int x1=(int) pos.x;

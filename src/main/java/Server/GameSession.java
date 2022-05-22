@@ -12,7 +12,7 @@ public class GameSession {
 
     private ArrayList<Obstacle> obstacles=new java.util.ArrayList<>();
     private LinkedList<Client> clients=new LinkedList<>();
-    private LinkedList<Car> cars=new LinkedList<>();
+    private ArrayList<Car> cars=new ArrayList<>();
 
     private Color pickColor(int i){
         switch (i){
@@ -30,13 +30,14 @@ public class GameSession {
     public GameSession(LinkedList<Socket> sockets){
 
         for (int i = 0; i < sockets.size(); i++) {
-            Car car=new Car(10,100,50*(i+1),pickColor(i));
+            Car car=new Car(10,350,80+25*i,pickColor(i));
             cars.add(car);
             clients.add(new Client(sockets.get(i),car));
         }
         loadLevel();
         start();
     }
+
     private void loadLevel(){
         try (InputStream is = new FileInputStream("maps/map");
              ObjectInputStream ois = new ObjectInputStream(is)) {
@@ -45,16 +46,11 @@ public class GameSession {
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println(ex);
 
-            CheckPoint checkPoint=new CheckPoint(400,180,400,55,0);
-            obstacles.add(checkPoint);
+            obstacles.add(new CheckPoint(400,180,400,55,0));
+            obstacles.add(new CheckPoint(595,643,594,782,1));
+            obstacles.add(new CheckPoint(612,195,611,378,2));
 
-            checkPoint=new CheckPoint(595,643,594,782,1);
-            obstacles.add(checkPoint);
-
-            checkPoint=new CheckPoint(612,195,611,378,2);
-            obstacles.add(checkPoint);
-
-            LapProgress.setNumberOfCheckpoints(3);
+            RaceProgress.setNumberOfCheckpoints(3);
 
             obstacles.add(new Obstacle(400,189,937,194));
             obstacles.add(new Obstacle(937,194,1029,284));
@@ -76,6 +72,7 @@ public class GameSession {
             obstacles.add(new Obstacle(190,375,191,188));
         }
     }
+
     final int FPS=60;
     public void start(){
         long realDeltaTime=0;
@@ -103,7 +100,9 @@ public class GameSession {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
+        if (client.getCar().getRaceProgress().getRaceResults()!=0){
+            return;
+        }
         if (clientMsg.isUp()){
             client.getCar().gas();
         }
@@ -117,14 +116,22 @@ public class GameSession {
             client.getCar().right();
         }
     }
-    private void sendMsgToClient(Client client){
+
+    private void sendMsgToClient(Client client, String msg){
+
         Socket socket=client.getSocket();
         LinkedList<CarView> carsView=new LinkedList<>();
         for (Car c:cars){
             carsView.add(new CarView(c.getPos(),c.getAlpha(),cars.indexOf(c), c.getColor()));
         }
 
-        ServerMsg serverMsg=new ServerMsg(carsView,client.getCar().getLapProgress().getProgressMsg());
+        ServerMsg serverMsg=new ServerMsg(carsView, msg);
+
+        if (msg.equals("")){
+            serverMsg=new ServerMsg(carsView, client.getCar().getRaceProgress().getProgressMsg());
+        }
+
+
         try {
             client.out.writeObject(serverMsg);
         } catch (IOException e) {
@@ -132,12 +139,31 @@ public class GameSession {
         }
     }
 
+    private int numberOfFinishers=0;
+
+    private void moveOutOfBounds(Car c){
+
+        c.setPos(new Vector(957+c.getRaceProgress().getRaceResults()*25,27));
+        c.setVel(0);
+        c.setAlpha(90);
+    }
+
     private void update(double delta) {
+
 
         for (Client c: clients){
             handleClientMsg(c);
         }
-        carCollision(cars.get(0),cars.get(1));
+
+        for (int i=0;i<cars.size();i++){
+            for (int j=i+1;j<cars.size();j++){
+                Car c1= cars.get(i);
+                Car c2=cars.get(j);
+                carCollision(c1,c2);
+            }
+        }
+
+
 
         for(Car c:cars){
             c.friction();
@@ -147,11 +173,30 @@ public class GameSession {
             }
             c.calcPos();
         }
+
+
+
         for (Client c: clients){
-            sendMsgToClient(c);
+            RaceProgress raceProgress=c.getCar().getRaceProgress();
+            if (raceProgress.checkIfEnd()){
+                if (raceProgress.getRaceResults()==0){
+                    numberOfFinishers++;
+                    raceProgress.setRaceResults(numberOfFinishers);
+                    moveOutOfBounds(c.getCar());
+                }
+
+                sendMsgToClient(c,"Your place: "+raceProgress.getRaceResults());
+            }else {
+                sendMsgToClient(c,"");
+            }
+
         }
+
+
+
     }
     public boolean carCollision(Car c1, Car c2){
+
         Vector d1=new Vector(c2.getPos());
         d1.sub(c1.getPos());
         double dist=d1.mag();
