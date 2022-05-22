@@ -94,6 +94,7 @@ public class GameSession {
     }
 
     private void handleClientMsg(Client client){
+        System.out.println("handleClientMsg start"+client.getSocket());
         ClientMsg clientMsg= null;
         try {
             clientMsg = (ClientMsg) client.in.readObject();
@@ -103,6 +104,7 @@ public class GameSession {
         if (client.getCar().getRaceProgress().getRaceResults()!=0){
             return;
         }
+
         if (clientMsg.isUp()){
             client.getCar().gas();
         }
@@ -115,9 +117,11 @@ public class GameSession {
         if (clientMsg.isRight()){
             client.getCar().right();
         }
+        System.out.println("handleClientMsg end"+client.getSocket());
     }
 
     private void sendMsgToClient(Client client, String msg){
+
 
         Socket socket=client.getSocket();
         LinkedList<CarView> carsView=new LinkedList<>();
@@ -137,6 +141,7 @@ public class GameSession {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private int numberOfFinishers=0;

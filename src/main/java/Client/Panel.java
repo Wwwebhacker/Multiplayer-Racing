@@ -35,7 +35,7 @@ public class Panel extends JPanel implements Runnable{
     }
     void connect()  {
         try {
-            client = new Socket("localhost", 9797);
+            client = new Socket("localhost", 9191);
             out = new ObjectOutputStream(client.getOutputStream());
             in = new ObjectInputStream(client.getInputStream());
 
@@ -49,7 +49,7 @@ public class Panel extends JPanel implements Runnable{
     private void loadLevel(){
         try (InputStream is = new FileInputStream("maps/map");
              ObjectInputStream ois = new ObjectInputStream(is)) {
-            obstacles=(ArrayList<Obstacle>) ois.readObject();
+            obstacles=(ArrayList<Obstacle>)ois.readObject();
 
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println(ex);
@@ -116,7 +116,7 @@ public class Panel extends JPanel implements Runnable{
 
     private String data="";
     void handleServerMsg(){
-
+        System.out.println("handleServerMsg start"+client);
         ServerMsg serverMsg= null;
         try {
             serverMsg = (ServerMsg) in.readObject();
@@ -126,14 +126,17 @@ public class Panel extends JPanel implements Runnable{
         }
         carsView=serverMsg.getCars();
         data=serverMsg.getMsg();
+        System.out.println("handleServerMsg end"+client);
     }
 
     private void sendMsgToClient(ClientMsg clientMsg){
+        System.out.println("sendMsgToClient start"+client);
         try {
             out.writeObject(clientMsg);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("sendMsgToClient end"+client);
     }
 
     private void update(double delta) throws InterruptedException {
