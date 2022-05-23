@@ -28,19 +28,26 @@ public class GameSession {
     }
 
     public GameSession(LinkedList<Socket> sockets){
+        int basex=350;
+        int basey=80;
+        int verticalCounter=0;
+        int horizontalCounter=-1;
+        for (int i = 0; i < sockets.size(); i++) {
 
-//        for (int i = 0; i < sockets.size(); i++) {
-//            Car car=new Car(10,350,80+25*i,pickColor(i));
-//            cars.add(car);
-//            clients.add(new Client(sockets.get(i),car));
-//        }
-        Car car=new Car(10,350,80+25*0,pickColor(0));
-        cars.add(car);
-        clients.add(new Client(sockets.get(0),car));
+            if (i%3==0){
+                verticalCounter=0;
+                horizontalCounter++;
+            }else {
+                verticalCounter++;
+            }
+            Car car=new Car(10,basex-50*horizontalCounter,basey+25*verticalCounter,pickColor(i));
 
-        car=new Car(5,350,80+25*1,pickColor(1));
-        cars.add(car);
-        clients.add(new Client(sockets.get(1),car));
+
+
+            cars.add(car);
+            clients.add(new Client(sockets.get(i),car));
+        }
+
 
 
         loadLevel();

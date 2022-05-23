@@ -39,7 +39,7 @@ public class RaceProgress {
     }
 
     public boolean checkIfEnd(){
-        if (lap>=5){
+        if (lap>=10){
             return true;
         }
         return false;
