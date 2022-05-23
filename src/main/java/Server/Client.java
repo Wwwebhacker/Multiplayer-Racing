@@ -1,8 +1,6 @@
 package Server;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class Client {
@@ -16,8 +14,8 @@ public class Client {
         this.socket=s;
         this.car=c;
         try {
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 
         } catch (IOException e) {
             e.printStackTrace();

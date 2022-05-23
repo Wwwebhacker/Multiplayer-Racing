@@ -109,7 +109,7 @@ public class GameSession {
         if (client.getCar().getRaceProgress().getRaceResults()!=0){
             return;
         }
-        client.getCar().gas();
+
         if (clientMsg.isUp()){
             client.getCar().gas();
         }

@@ -36,8 +36,8 @@ public class Panel extends JPanel implements Runnable{
     void connect()  {
         try {
             client = new Socket("localhost", 9191);
-            out = new ObjectOutputStream(client.getOutputStream());
-            in = new ObjectInputStream(client.getInputStream());
+            out = new ObjectOutputStream(new BufferedOutputStream(client.getOutputStream()));
+            in = new ObjectInputStream(new BufferedInputStream(client.getInputStream()));
 
             System.out.println("Client: connected to"+client);
         } catch (IOException e) {
