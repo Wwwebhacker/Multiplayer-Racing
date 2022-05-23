@@ -74,29 +74,27 @@ public class GameSession {
         }
     }
 
-    final int FPS=260;
+    final int FPS=60;
 
     public void start(){
-        while (true){
-            update(1);
-        }
 
-//        long realDeltaTime=0;
-//        long lastUpdateTime=System.nanoTime();
-//
-//        double targetFrameTime=1000000000.0/FPS;
-//        double accumulator=0;
-//
-//        while (true){
-//            realDeltaTime=System.nanoTime()-lastUpdateTime;
-//            lastUpdateTime+=realDeltaTime;
-//            accumulator+=realDeltaTime;
-//
-//            while (accumulator>targetFrameTime){
-//                update(targetFrameTime);// targetFrameTime or Accumulator????
-//                accumulator-=targetFrameTime;
-//            }
-//        }
+
+        long realDeltaTime=0;
+        long lastUpdateTime=System.nanoTime();
+
+        double targetFrameTime=1000000000.0/FPS;
+        double accumulator=0;
+
+        while (true){
+            realDeltaTime=System.nanoTime()-lastUpdateTime;
+            lastUpdateTime+=realDeltaTime;
+            accumulator+=realDeltaTime;
+
+            while (accumulator>targetFrameTime){
+                update(targetFrameTime);// targetFrameTime or Accumulator????
+                accumulator-=targetFrameTime;
+            }
+        }
     }
 
     private void handleClientMsg(Client client){
