@@ -14,9 +14,10 @@ public class Client {
         this.socket=s;
         this.car=c;
         try {
-            out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 
+            out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+
+            in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }

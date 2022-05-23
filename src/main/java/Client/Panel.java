@@ -1,6 +1,7 @@
 package Client;
 
 import Shared.*;
+import com.sun.source.tree.WhileLoopTree;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,14 +37,19 @@ public class Panel extends JPanel implements Runnable{
     void connect()  {
         try {
             client = new Socket("localhost", 9191);
+            //client.setTcpNoDelay (true);
+
             out = new ObjectOutputStream(new BufferedOutputStream(client.getOutputStream()));
+            sendMsgToClient(new ClientMsg());
+
             in = new ObjectInputStream(new BufferedInputStream(client.getInputStream()));
 
             System.out.println("Client: connected to"+client);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sendMsgToClient(new ClientMsg());
+
+
     }
     Thread gameThread;
     private void loadLevel(){
@@ -130,6 +136,7 @@ public class Panel extends JPanel implements Runnable{
         //System.out.println("handleServerMsg start"+client);
         ServerMsg serverMsg= null;
         try {
+
             serverMsg = (ServerMsg) in.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
@@ -143,8 +150,10 @@ public class Panel extends JPanel implements Runnable{
     private void sendMsgToClient(ClientMsg clientMsg){
         //System.out.println("sendMsgToClient start"+client);
         try {
+
             out.writeObject(clientMsg);
             out.flush();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

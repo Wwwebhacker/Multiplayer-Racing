@@ -36,6 +36,7 @@ public class GameSession {
         }
         loadLevel();
         start();
+
     }
 
     private void loadLevel(){
@@ -102,7 +103,9 @@ public class GameSession {
         //System.out.println("handleClientMsg start"+client.getSocket());
         ClientMsg clientMsg= null;
         try {
+
             clientMsg = (ClientMsg) client.in.readObject();
+
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -142,8 +145,10 @@ public class GameSession {
 
 
         try {
+
             client.out.writeObject(serverMsg);
             client.out.flush();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
