@@ -29,11 +29,20 @@ public class GameSession {
 
     public GameSession(LinkedList<Socket> sockets){
 
-        for (int i = 0; i < sockets.size(); i++) {
-            Car car=new Car(10,350,80+25*i,pickColor(i));
-            cars.add(car);
-            clients.add(new Client(sockets.get(i),car));
-        }
+//        for (int i = 0; i < sockets.size(); i++) {
+//            Car car=new Car(10,350,80+25*i,pickColor(i));
+//            cars.add(car);
+//            clients.add(new Client(sockets.get(i),car));
+//        }
+        Car car=new Car(10,350,80+25*0,pickColor(0));
+        cars.add(car);
+        clients.add(new Client(sockets.get(0),car));
+
+        car=new Car(5,350,80+25*1,pickColor(1));
+        cars.add(car);
+        clients.add(new Client(sockets.get(1),car));
+
+
         loadLevel();
         start();
 

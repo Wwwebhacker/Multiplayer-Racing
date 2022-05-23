@@ -36,7 +36,7 @@ public class Panel extends JPanel implements Runnable{
     }
     void connect()  {
         try {
-            client = new Socket("localhost", 9191);
+            client = new Socket("153.19.213.251", 9191);
             //client.setTcpNoDelay (true);
 
             out = new ObjectOutputStream(new BufferedOutputStream(client.getOutputStream()));
