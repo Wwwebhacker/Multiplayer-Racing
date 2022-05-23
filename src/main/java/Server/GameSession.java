@@ -143,6 +143,7 @@ public class GameSession {
 
         try {
             client.out.writeObject(serverMsg);
+            client.out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

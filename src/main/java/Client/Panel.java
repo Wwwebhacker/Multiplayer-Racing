@@ -144,6 +144,7 @@ public class Panel extends JPanel implements Runnable{
         //System.out.println("sendMsgToClient start"+client);
         try {
             out.writeObject(clientMsg);
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
